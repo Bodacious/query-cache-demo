@@ -1,4 +1,4 @@
-<h1>All recipes published by <%= current_user.name %></h1>
+<h1>All recipes published by <%= @user.name %></h1>
 
 <% if @user.recipes.exists? %>
   <%= render partial: "recipes/recipe",
