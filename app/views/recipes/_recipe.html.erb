@@ -1,3 +1,11 @@
+<%#
+This calls an extra QB query to load the user via the recipe.author association
+This helps to ensure the number of non-cached DB queries is identical in both cases.
+%>
+<% if local_assigns[:recipe_counter].zero? %>
+  <% recipe.author %>
+<% end %>
+
 <article class="recipe">
   <h3 class="recipe__title"><%= recipe.title %></h3>
   <div class="recipe__author">
