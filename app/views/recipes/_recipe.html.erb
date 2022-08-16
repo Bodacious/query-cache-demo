@@ -1,0 +1,15 @@
+<article class="recipe">
+  <h3 class="recipe__title"><%= recipe.title %></h3>
+  <div class="recipe__author">
+    <div class="author">
+      Written by
+      <span class="author__name">
+        <%# Allows us to artificially control whether author is called from query cache or not %>
+        <%= local_assigns[:user].try(:name) || recipe.author.name %>
+      </span>
+    </div>
+  </div>
+  <div class="recipe__content">
+    <%= recipe.content %>
+  </div>
+</article>
