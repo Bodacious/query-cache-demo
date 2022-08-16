@@ -1,2 +1,15 @@
-<%= link_to "Cached", cached_recipes_path %>
-<%= link_to "Memoized", memoized_recipes_path %>
+<h1>Home</h1>
+
+<p>
+  This site is made up of two, near-identical pages.
+  These pages differ, however, in how they load content on the page.
+  <br>
+  <br>
+  One page memoizes the user instance, to avoid loading from the ActiveRecord query cache;
+  the other page uses ActiveRecord's query cache.
+</p>
+
+<ul>
+  <li><%= link_to "Cached", cached_user_recipes_path(user_id: 1) %></li>
+  <li><%= link_to "Memoized", memoized_user_recipes_path(user_id: 1) %></li>
+</ul>
