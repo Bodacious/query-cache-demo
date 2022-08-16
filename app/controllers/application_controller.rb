@@ -9,10 +9,14 @@ class ApplicationController < ActionController::Base
   end
 
   def ensure_current_user_id
-    session[:current_user_id] ||= (1..8).to_a.sample
+    session[:current_user_id] = random_user_id
+  end
+
+  def random_user_id
+    User.pluck(:id).sample
   end
 
   def current_user_id
-    session[:current_user_id] || ensure_current_user_id
+    (session[:current_user_id] || params[:current_user_id] || ensure_current_user_id).to_i
   end
 end
