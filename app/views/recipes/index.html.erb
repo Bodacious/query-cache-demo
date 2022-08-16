@@ -1,10 +1,10 @@
 <h1>All recipes published by <%= @user.name %></h1>
 
-<% if @user.recipes.exists? %>
+<% if @recipes.any? %>
   <%= render partial: "recipes/recipe",
-             collection: @user.recipes,
+             collection: @recipes,
              # Allows us to artificially control whether author is called from query cache or not
-             locals: { user: memoized? ? @user : nil } %>
+             locals: { memoized: memoized? } %>
 <% else %>
   <div class="empty-set"><%= @user.name %> hasn't published any recipes yet.</div>
 <% end %>

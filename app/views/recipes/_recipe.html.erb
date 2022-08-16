@@ -13,7 +13,7 @@ This helps to ensure the number of non-cached DB queries is identical in both ca
       Written by
       <span class="author__name">
         <%# Allows us to artificially control whether author is called from query cache or not %>
-        <%= local_assigns[:user].try(:name) || recipe.author.name %>
+        <%= recipe.author_with_optional_memoization(memoize: memoized?).name %>
       </span>
     </div>
   </div>
