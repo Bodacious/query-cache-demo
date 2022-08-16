@@ -1,136 +1,111 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This simple Rails application demonstrates the impact that ActiveRecord's query cache has on web application performance.
 
-Things you may want to cover:
+## Setting up the app
 
-* Ruby version
+After you have downloaded the app, run the following commands:
 
-* System dependencies
+```
+$ bin/setup
+```
 
-* Configuration
+## Start the application
 
-* Database creation
+The application can be started at localhost:3000 by running the following:
 
-* Database initialization
+```
+$ rails server
+```
 
-* How to run the test suite
+## Understanding this app
 
-* Services (job queues, cache servers, search engines, etc.)
+This simple application shows a list of recipes that belong to a user.
 
-* Deployment instructions
+The application will automatically sign you in as a random user (to force the calling of a few DB requests). You may manually control which user you are signed in as, by providing a `current_user_id` query param.
 
-* ...
+There are two main pages that are relevant to this demonstration. The _cached_ page and the _memoized_ page. The cached page follows a conventional Ruby on Rails pattern, where records are loaded once from the database, and then subsequent DB queries are loaded from the ActiveRecord query cache. The _memoized_ page avoids using ActiveRecord's query cache, and instead caches records in memory using a so-called _memo-ized_ pattern.
+
+## Running the benchmarks
+
+You can compare the performance of each approach by running a benchmark against the code:
+
+```
+$ ab -c2 -n2000 ab -c2 -n2000 http://localhost:3000/cached/users/1/recipes\?current_user_id\=5
+
+# Then...
+
+$ ab -c2 -n2000 ab -c2 -n2000 http://localhost:3000/memoized/users/1/recipes\?current_user_id\=5
+```
 
 ## Results
 
+### Results with query-cache
+
 ```
-This is ApacheBench, Version 2.3 <$Revision: 1879490 $>
-Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
-Licensed to The Apache Software Foundation, http://www.apache.org/
-
-Benchmarking localhost (be patient)
-Completed 200 requests
-Completed 400 requests
-Completed 600 requests
-Completed 800 requests
-Completed 1000 requests
-Completed 1200 requests
-Completed 1400 requests
-Completed 1600 requests
-Completed 1800 requests
-Completed 2000 requests
-Finished 2000 requests
-
-
-Server Software:
-Server Hostname:        localhost
-Server Port:            3000
-
-Document Path:          /cached/users/1/recipes?current_user_id=5
-Document Length:        34366 bytes
-
 Concurrency Level:      2
-Time taken for tests:   32.581 seconds
+Time taken for tests:   32.748 seconds
 Complete requests:      2000
 Failed requests:        0
-Total transferred:      71559785 bytes
-HTML transferred:       68732000 bytes
-Requests per second:    61.39 [#/sec] (mean)
-Time per request:       32.581 [ms] (mean)
-Time per request:       16.290 [ms] (mean, across all concurrent requests)
-Transfer rate:          2144.90 [Kbytes/sec] received
+Total transferred:      70863171 bytes
+HTML transferred:       68034000 bytes
+Requests per second:    61.07 [#/sec] (mean)
+Time per request:       32.748 [ms] (mean)
+Time per request:       16.374 [ms] (mean, across all concurrent requests)
+Transfer rate:          2113.19 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.0      0       0
-Processing:    15   32   5.7     32     114
-Waiting:       15   32   5.7     31     114
-Total:         15   33   5.7     32     114
+Processing:    20   33   6.1     31      78
+Waiting:       20   32   6.1     31      77
+Total:         20   33   6.1     32      78
 
 Percentage of the requests served within a certain time (ms)
   50%     32
-  66%     32
+  66%     33
   75%     33
   80%     34
   90%     36
-  95%     37
-  98%     51
-  99%     59
- 100%    114 (longest request)
-query-cache-demo(main):ab -c2 -n2000 http://localhost:3000/memoized/users/1/recipes\?current_user_id\=5
-This is ApacheBench, Version 2.3 <$Revision: 1879490 $>
-Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
-Licensed to The Apache Software Foundation, http://www.apache.org/
+  95%     40
+  98%     57
+  99%     67
+ 100%     78 (longest request)
+```
 
-Benchmarking localhost (be patient)
-Completed 200 requests
-Completed 400 requests
-Completed 600 requests
-Completed 800 requests
-Completed 1000 requests
-Completed 1200 requests
-Completed 1400 requests
-Completed 1600 requests
-Completed 1800 requests
-Completed 2000 requests
-Finished 2000 requests
+### Results with no query-cache (memoized)
 
-
-Server Software:
-Server Hostname:        localhost
-Server Port:            3000
-
-Document Path:          /memoized/users/1/recipes?current_user_id=5
-Document Length:        34366 bytes
-
+```
 Concurrency Level:      2
-Time taken for tests:   22.397 seconds
+Time taken for tests:   22.147 seconds
 Complete requests:      2000
 Failed requests:        0
-Total transferred:      71551714 bytes
-HTML transferred:       68732000 bytes
-Requests per second:    89.30 [#/sec] (mean)
-Time per request:       22.397 [ms] (mean)
-Time per request:       11.198 [ms] (mean, across all concurrent requests)
-Transfer rate:          3119.87 [Kbytes/sec] received
+Total transferred:      70854011 bytes
+HTML transferred:       68034000 bytes
+Requests per second:    90.31 [#/sec] (mean)
+Time per request:       22.147 [ms] (mean)
+Time per request:       11.073 [ms] (mean, across all concurrent requests)
+Transfer rate:          3124.29 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   0.0      0       0
-Processing:    12   22   3.6     22      65
-Waiting:       12   22   3.6     22      64
-Total:         12   22   3.6     22      65
+Connect:        0    0   0.0      0       1
+Processing:    12   22   3.6     22      71
+Waiting:       12   22   3.6     21      71
+Total:         13   22   3.6     22      71
 
 Percentage of the requests served within a certain time (ms)
   50%     22
-  66%     23
+  66%     22
   75%     23
-  80%     24
-  90%     25
-  95%     26
-  98%     28
+  80%     23
+  90%     24
+  95%     25
+  98%     29
   99%     42
- 100%     65 (longest request)
+ 100%     71 (longest request)
 ```
+
+## Conclusion
+
+This simple application demonstrates that relying on ActiveRecord's query cache to return records is not as fast as storing the records in memory (via a variable or constant). Developers should be mindful of which strategy they are using when interacting with ActiveRecord objects.
