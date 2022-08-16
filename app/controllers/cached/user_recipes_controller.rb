@@ -6,11 +6,8 @@ class Cached::UserRecipesController < ApplicationController
 
   private
 
+  # Also defining here, for parity with memoized controller
   def current_user
-    User.find(current_user_id)
-  end
-
-  def current_user?
-    !!current_user
+    super
   end
 end
