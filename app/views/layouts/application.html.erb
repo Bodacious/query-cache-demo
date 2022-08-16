@@ -11,7 +11,8 @@
   <body>
     <nav>
       <% if current_user? %>
-        You are currently signed in as <%= current_user.name %>
+        You are currently signed in as <%= current_user.name %>.
+        <%= button_to("Switch user", session_path, method: :delete) %>
       <% end %>
     </nav>
     <main> <%= yield %> </main>

@@ -9,5 +9,6 @@ Rails.application.routes.draw do
       resources :recipes, controller: "user_recipes", only: [:index]
     end
   end
+  resource :session, only: [:destroy]
   root to: "home#show"
 end
