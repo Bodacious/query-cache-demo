@@ -31,11 +31,11 @@ There are two main pages that are relevant to this demonstration. The _cached_ p
 You can compare the performance of each approach by running a benchmark against the code:
 
 ```
-$ ab -c2 -n2000 ab -c2 -n2000 http://localhost:3000/cached/users/1/recipes\?current_user_id\=5
+$ ab -c2 -n2000 http://127.0.0.1:3000/cached/users/1/recipes\?current_user_id\=5
 
 # Then...
 
-$ ab -c2 -n2000 ab -c2 -n2000 http://localhost:3000/memoized/users/1/recipes\?current_user_id\=5
+$ ab -c2 -n2000 http://127.0.0.1:3000/memoized/users/1/recipes\?current_user_id\=5
 ```
 
 ## Results
@@ -44,66 +44,66 @@ $ ab -c2 -n2000 ab -c2 -n2000 http://localhost:3000/memoized/users/1/recipes\?cu
 
 ```
 Concurrency Level:      2
-Time taken for tests:   32.748 seconds
+Time taken for tests:   19.733 seconds
 Complete requests:      2000
 Failed requests:        0
-Total transferred:      70863171 bytes
-HTML transferred:       68034000 bytes
-Requests per second:    61.07 [#/sec] (mean)
-Time per request:       32.748 [ms] (mean)
-Time per request:       16.374 [ms] (mean, across all concurrent requests)
-Transfer rate:          2113.19 [Kbytes/sec] received
+Total transferred:      136566298 bytes
+HTML transferred:       134538000 bytes
+Requests per second:    101.36 [#/sec] (mean)
+Time per request:       19.733 [ms] (mean)
+Time per request:       9.866 [ms] (mean, across all concurrent requests)
+Transfer rate:          6758.66 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.0      0       0
-Processing:    20   33   6.1     31      78
-Waiting:       20   32   6.1     31      77
-Total:         20   33   6.1     32      78
+Processing:     9   20   5.3     19      74
+Waiting:        9   18   5.1     18      74
+Total:          9   20   5.3     19      74
 
 Percentage of the requests served within a certain time (ms)
-  50%     32
-  66%     33
-  75%     33
-  80%     34
-  90%     36
-  95%     40
-  98%     57
-  99%     67
- 100%     78 (longest request)
+  50%     19
+  66%     19
+  75%     20
+  80%     21
+  90%     25
+  95%     27
+  98%     36
+  99%     45
+ 100%     74 (longest request)
 ```
 
 ### Results with no query-cache (memoized)
 
 ```
 Concurrency Level:      2
-Time taken for tests:   22.147 seconds
+Time taken for tests:   7.850 seconds
 Complete requests:      2000
 Failed requests:        0
-Total transferred:      70854011 bytes
-HTML transferred:       68034000 bytes
-Requests per second:    90.31 [#/sec] (mean)
-Time per request:       22.147 [ms] (mean)
-Time per request:       11.073 [ms] (mean, across all concurrent requests)
-Transfer rate:          3124.29 [Kbytes/sec] received
+Total transferred:      136566652 bytes
+HTML transferred:       134538000 bytes
+Requests per second:    254.79 [#/sec] (mean)
+Time per request:       7.850 [ms] (mean)
+Time per request:       3.925 [ms] (mean, across all concurrent requests)
+Transfer rate:          16990.05 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   0.0      0       1
-Processing:    12   22   3.6     22      71
-Waiting:       12   22   3.6     21      71
-Total:         13   22   3.6     22      71
+Connect:        0    0   0.0      0       0
+Processing:     4    8   2.1      7      32
+Waiting:        4    7   2.1      7      32
+Total:          4    8   2.1      7      32
 
 Percentage of the requests served within a certain time (ms)
-  50%     22
-  66%     22
-  75%     23
-  80%     23
-  90%     24
-  95%     25
-  98%     29
-  99%     42
- 100%     71 (longest request)
+  50%      7
+  66%      8
+  75%      8
+  80%      8
+  90%      9
+  95%     10
+  98%     11
+  99%     16
+ 100%     32 (longest request)
 ```
 
 ## Conclusion
